@@ -46,7 +46,7 @@ function getMimeTypeFromBase64(base64Data: string): string {
 }
 
 const ConvertToFamilyGuySchema = z.object({
-  image_data: z.string().describe("Base64-encoded image data to convert to Family Guy style"),
+  puch_image_data: z.string().describe("Base64-encoded image data to convert to Family Guy style"),
   characterName: z.string().optional(),
   numberOfImages: z.number().min(1).max(4).optional().default(1),
 });
@@ -67,7 +67,7 @@ server.addTool({
   execute: async (args) => {
     try {
       const validatedArgs = ConvertToFamilyGuySchema.parse(args);
-      const { image_data, characterName, numberOfImages } = validatedArgs;
+      const { puch_image_data: image_data, characterName, numberOfImages } = validatedArgs;
 
       const imageBuffer = base64ToBuffer(image_data);
       const mimeType = getMimeTypeFromBase64(image_data);

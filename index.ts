@@ -5,6 +5,7 @@ import { z } from "zod";
 const EnvSchema = z.object({
   GEMINI_API_KEY: z.string(),
   MCP_SECRET_TOKEN: z.string(),
+  MY_NUMBER: z.string(),
   PORT: z.string().optional().transform(val => val ? parseInt(val) : 8080)
 });
 
@@ -48,6 +49,15 @@ const ConvertToFamilyGuySchema = z.object({
   image_data: z.string().describe("Base64-encoded image data to convert to Family Guy style"),
   characterName: z.string().optional(),
   numberOfImages: z.number().min(1).max(4).optional().default(1),
+});
+
+server.addTool({
+  name: "validate",
+  description: "Returns the phone number in plain text if the user is authenticated.",
+  parameters: z.object({}),
+  execute: async () => {
+    return env.MY_NUMBER;
+  }
 });
 
 server.addTool({

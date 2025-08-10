@@ -32,11 +32,6 @@ const server = new FastMCP({
   },
 });
 
-function base64ToBuffer(base64Data: string): Buffer {
-  const cleanBase64 = base64Data.replace(/^data:image\/[a-z]+;base64,/, "");
-  return Buffer.from(cleanBase64, "base64");
-}
-
 function getMimeTypeFromBase64(base64Data: string): string {
   if (base64Data.startsWith("data:")) {
     const match = base64Data.match(/^data:([^;]+);base64,/);
@@ -69,7 +64,6 @@ server.addTool({
       const validatedArgs = ConvertToFamilyGuySchema.parse(args);
       const { puch_image_data: image_data, characterName, numberOfImages } = validatedArgs;
 
-      const imageBuffer = base64ToBuffer(image_data);
       const mimeType = getMimeTypeFromBase64(image_data);
 
       const familyGuyPrompt = `Convert this image to Family Guy animated character style${characterName ? ` as ${characterName}` : ""}.
@@ -92,7 +86,7 @@ Style: Family Guy animated character, cartoon illustration, thick outlines, flat
         {
           inlineData: {
             mimeType: mimeType,
-            data: imageBuffer.toString("base64")
+            data: image_data
           }
         }
       ];
